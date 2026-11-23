@@ -35,3 +35,7 @@ venv/
 *.njsproj
 *.sln
 *.sw?
+
+# Local report copies containing personal details; keep them out of Git.
+Project_Report/ScanGuard_Report_CU_Format.docx
+Project_Report/ScanGuard_Report_CU_Format.pdf
