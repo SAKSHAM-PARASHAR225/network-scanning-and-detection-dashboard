@@ -1,0 +1,155 @@
+.radar-shell {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  aspect-ratio: 1 / 1;
+  border-radius: 9999px;
+  background: radial-gradient(circle at center, rgba(8, 20, 32, 0.9) 0%, rgba(4, 10, 18, 0.98) 72%, rgba(2, 6, 12, 1) 100%);
+  border: 1px solid var(--radar-color, #22d3ee);
+  box-shadow: 0 0 24px -6px var(--radar-color, #22d3ee), inset 0 0 40px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+.radar-shell--pulse {
+  animation: radar-glow-pulse 2.4s ease-in-out infinite;
+}
+
+.radar-shell--pulse-fast {
+  animation: radar-glow-pulse 0.9s ease-in-out infinite;
+}
+
+.radar-rings {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.radar-sweep {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: conic-gradient(from 0deg, transparent 0deg, transparent 300deg, color-mix(in srgb, var(--radar-color, #22d3ee) 55%, transparent) 330deg, color-mix(in srgb, var(--radar-color, #22d3ee) 85%, transparent) 358deg, transparent 360deg);
+  border-radius: 9999px;
+  transform-origin: 50% 50%;
+  animation: radar-rotate 4s linear infinite;
+  mix-blend-mode: screen;
+}
+
+.radar-sweep--paused {
+  animation-play-state: paused;
+  opacity: 0.35;
+}
+
+.radar-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  transform: translate(-50%, -50%);
+  background: var(--radar-color, #22d3ee);
+  box-shadow: 0 0 10px 3px var(--radar-color, #22d3ee);
+  z-index: 3;
+}
+
+.radar-dot {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 0;
+  border-radius: 9999px;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  cursor: pointer;
+  transition: width 160ms ease, height 160ms ease;
+}
+
+/* Invisible, larger hit target — 9px dots are too small to hover reliably. */
+.radar-dot::before {
+  content: '';
+  position: absolute;
+  inset: -7px;
+  border-radius: 9999px;
+}
+
+.radar-dot--hovered,
+.radar-dot--selected {
+  width: 13px;
+  height: 13px;
+  z-index: 3;
+}
+
+.radar-dot--selected::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 9999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 12px 1px currentColor;
+  animation: radar-select-ring 1.6s ease-out infinite;
+}
+
+@keyframes radar-select-ring {
+  0% { transform: scale(0.85); opacity: 1; }
+  100% { transform: scale(1.5); opacity: 0.15; }
+}
+
+.radar-dot--pulse {
+  animation: radar-pulse-dot 1.8s ease-in-out infinite;
+}
+
+.radar-dot--pulse-fast {
+  animation: radar-pulse-fast 0.7s ease-in-out infinite;
+}
+
+.radar-offline-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(4, 8, 14, 0.55);
+  z-index: 4;
+}
+
+@keyframes radar-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes radar-pulse-dot {
+  0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.35; transform: translate(-50%, -50%) scale(1.9); }
+}
+
+@keyframes radar-pulse-fast {
+  0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.25; transform: translate(-50%, -50%) scale(2.4); }
+}
+
+@keyframes radar-glow-pulse {
+  0%, 100% { box-shadow: 0 0 18px -6px var(--radar-color, #22d3ee), inset 0 0 40px rgba(0, 0, 0, 0.6); }
+  50% { box-shadow: 0 0 34px 2px var(--radar-color, #22d3ee), inset 0 0 40px rgba(0, 0, 0, 0.6); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .radar-sweep {
+    animation: none;
+    opacity: 0.45;
+  }
+  .radar-shell--pulse,
+  .radar-shell--pulse-fast {
+    animation: none;
+  }
+  .radar-dot--pulse,
+  .radar-dot--pulse-fast,
+  .radar-dot--selected::after {
+    animation: none;
+    opacity: 0.9;
+  }
+}
